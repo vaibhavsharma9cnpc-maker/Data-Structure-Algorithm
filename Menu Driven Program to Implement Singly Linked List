@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+void insertAtEnd(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+}
+
+void display() {
+    struct Node* temp = head;
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+void menu() {
+    int choice, val;
+    while (1) {
+        printf("1. Insert at end\n2. Display\n3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &val);
+                insertAtEnd(val);
+                break;
+            case 2:
+                display();
+                break;
+            case 3:
+                exit(0);
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+}
+
+int main() {
+    menu();
+    return 0;
+}
