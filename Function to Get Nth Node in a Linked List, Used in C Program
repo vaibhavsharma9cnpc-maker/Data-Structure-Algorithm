@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+int getNthNode(int n) {
+    struct Node* current = head;
+    int count = 0;
+    while (current != NULL) {
+        if (count == n)
+            return current->data;
+        count++;
+        current = current->next;
+    }
+    return -1; // Node does not exist
+}
+
+void insertAtEnd(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+}
+
+int main() {
+    insertAtEnd(10);
+    insertAtEnd(20);
+    insertAtEnd(30);
+    int n = 1;
+    int val = getNthNode(n);
+    if (val != -1)
+        printf("Data at %dth node is %d\n", n, val);
+    else
+        printf("Node does not exist\n");
+    return 0;
+}
