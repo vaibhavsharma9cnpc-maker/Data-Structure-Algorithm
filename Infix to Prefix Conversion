@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX 100
+
+char stack[MAX];
+int top = -1;
+
+void push(char c) {
+    stack[++top] = c;
+}
+
+char pop() {
+    if (top == -1)
+        return -1;
+    return stack[top--];
+}
+
+int precedence(char c) {
+    switch (c) {
+        case '+':
+        case '-': return 1;
+        case '*':
+        case '/': return 2;
+        case '^': return 3;
+    }
+    return 0;
+}
+
+int isOperator(char c) {
+    return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
+}
+
+void reverse(char* str) {
+    int len = strlen(str);
+    for (int i = 0; i < len / 2; i++) {
+        char temp = str[i];
+        str[i] = str[len - i - 1];
+        str[len - i - 1] = temp;
+    }
+}
+
+void infixToPrefix(char* infix, char* prefix) {
+    reverse(infix);
+    int i = 0, j = 0;
+    char c, temp;
+
+    for (int k = 0; infix[k]; k++) {
+        if (infix[k] == '(')
+            infix[k] = ')';
+        else if (infix[k] == ')')
+            infix[k] = '(';
+    }
+
+    while ((c = infix[i++]) != '\0') {
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
+            prefix[j++] = c;
+        else if (c == '(')
+            push(c);
+        else if (c == ')') {
+            while ((temp = pop()) != '(')
+                prefix[j++] = temp;
+        } else if (isOperator(c)) {
+            while (top != -1 && precedence(stack[top]) > precedence(c))
+                prefix[j++] = pop();
+            push(c);
+        }
+    }
+    while (top != -1)
+        prefix[j++] = pop();
+    prefix[j] = '\0';
+    reverse(prefix);
+}
+
+int main() {
+    char infix[MAX], prefix[MAX];
+    printf("Enter an infix expression: ");
+    gets(infix);
+    infixToPrefix(infix, prefix);
+    printf("Prefix expression: %s\n", prefix);
+    return 0;
+}
