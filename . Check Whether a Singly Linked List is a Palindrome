@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+void insertAtEnd(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+}
+
+bool isPalindrome() {
+    int stack[1000];
+    int top = -1;
+    struct Node* slow = head;
+    struct Node* fast = head;
+    while (fast != NULL && fast->next != NULL) {
+        stack[++top] = slow->data;
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    if (fast != NULL)  // Odd number of nodes
+        slow = slow->next;
+    while (slow != NULL) {
+        if (stack[top--] != slow->data)
+            return false;
+        slow = slow->next;
+    }
+    return true;
+}
+
+int main() {
+    insertAtEnd(1);
+    insertAtEnd(2);
+    insertAtEnd(2);
+    insertAtEnd(1);
+    if (isPalindrome())
+        printf("Linked list is a palindrome\n");
+    else
+        printf("Linked list is not a palindrome\n");
+    return 0;
+}
